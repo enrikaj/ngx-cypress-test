@@ -155,12 +155,28 @@ describe('First test suit', () => {
         cy.contains('Forms').click();
         cy.contains('Datepicker').click();
 
+        //2.1. Create a new variable and create a date object (more info google -> JS date -> Mozilla Developer):
+        let date = new Date();
+        //2.2. I want to select the day wich is 5 days from today, so call the object:
+        date.setDate(date.getDate() + 5);
+        // console.log(date) checking how the date is printed in console
+        //2.2. new variable for date wich will be as a selector in the calander
+        let futureDate = date.getDate();
+        //2.3. new variable for an expected result:
+        let dateToAssert = `Oct ${futureDate}, 2024`
+
+        // cy.contains('nb-card', 'Common Datepicker').find('input').then( input => {
+        //     cy.wrap(input).click(); // Date Picker is opened
+        //     //1. select date in current mounth:
+        //     cy.get('.day-cell').not('.bounding-month').contains('23').click();
+        //     //1.1. check that the date is selected successfully:
+        //     cy.wrap(input).invoke('prop', 'value').should('contain', 'Oct 23, 2024');
+        //     //2. Use date object to get the date:
         cy.contains('nb-card', 'Common Datepicker').find('input').then( input => {
-            cy.wrap(input).click(); // Date Picker is opened
-            //select date in current mounth:
-            cy.get('.day-cell').not('.bounding-month').contains('23').click();
-            //check that the date is selected successfully:
-            cy.wrap(input).invoke('prop', 'value').should('contain', 'Oct 23, 2024')
+            cy.wrap(input).click();
+            cy.get('.day-cell').not('.bounding-month').contains(futureDate).click();
+            cy.wrap(input).invoke('prop', 'value').should('contain', dateToAssert);
+            cy.wrap(input).should('have.value', dateToAssert);
         })
     })
 
