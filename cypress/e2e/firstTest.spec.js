@@ -122,8 +122,8 @@ describe('First test suit', () => {
         cy.get('#exampleInputEmail1').invoke('prop', 'value').should('contain', 'test@test.com').then( property => {
             expect(property).to.equal('test@test.com');
         })
-    })
-    it.only('radio buttons', () => {
+    });
+    it('radio buttons', () => {
         cy.visit('/');
         cy.contains('Forms').click();
         cy.contains('Form Layouts').click();
@@ -134,10 +134,18 @@ describe('First test suit', () => {
             cy.wrap(radioButtons).eq(1).check({force: true}) //select the second radio button
             cy.wrap(radioButtons).eq(0).should('not.be.checked') // we expect the the first radio button is deselected and should not be checked
             cy.wrap(radioButtons).eq(2).should('be.disabled') //the last radio button should be disabled.
-        })
+        });
 
-    })
+    });
 
+    it.only('checkboxes', () => {
+        cy.visit('/');
+        cy.contains('Modal & Overlays').click();
+        cy.contains('Toastr').click();
 
+        //cy.get('[type="checkbox"]').check({force: true})
+        cy.get('[type="checkbox"]').eq(0).click({force: true}) //this does not check the checkbox status
+        cy.get('[type="checkbox"]').eq(1).check({force: true}) //
+    });
 
 })
