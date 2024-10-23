@@ -116,6 +116,17 @@ describe('First test suit', () => {
         cy.get('[for="exampleInputEmail1"]').invoke('attr', 'class').then( classValue => {
             expect(classValue).to.equal('label')
         })
+
+        //5 Invoke HTML properties (inspect the page and open the tab "Properties"), check that the text exists in input field (for example Email):
+        cy.get('#exampleInputEmail1').type('test@test.com');
+        cy.get('#exampleInputEmail1').invoke('prop', 'value').should('contain', 'test@test.com').then( property => {
+            expect(property).to.equal('test@test.com');
+        });
+
+
+
+
+
     })
 
 
