@@ -131,6 +131,9 @@ describe('First test suit', () => {
         cy.contains('nb-card', 'Using the Grid').find('[type="radio"]').then( radioButtons => {
             //cy.wrap(radioButtons).eq(0).check() //check the first radio button in the form, its index is 0.
             cy.wrap(radioButtons).eq(0).check({force: true}).should('be.checked')  //cypress is not able to find the radio button and click it, because it has the class 'visually-hidden', so we use the 'force'. 
+            cy.wrap(radioButtons).eq(1).check({force: true}) //select the second radio button
+            cy.wrap(radioButtons).eq(0).should('not.be.checked') // we expect the the first radio button is deselected and should not be checked
+            cy.wrap(radioButtons).eq(2).should('be.disabled') //the last radio button should be disabled.
         })
 
     })
