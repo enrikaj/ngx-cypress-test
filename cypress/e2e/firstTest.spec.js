@@ -100,11 +100,11 @@ describe('First test suit', () => {
         cy.get('[for="exampleInputEmail1"]').should('contain', 'Email address');
 
         //2
-        cy.get('[for="exampleInputEmail1"]').then( label => {
-            const labelText = label.text();
-            expect(labelText).to.equal('Email address');
-            cy.wrap(labelText).should('contain', 'Email address');
-        });
+        // cy.get('[for="exampleInputEmail1"]').then( label => {
+        //     const labelText = label.text();
+        //     expect(labelText).to.equal('Email address');
+        //     cy.wrap(labelText).should('contain', 'Email address');
+        // });
 
         // //3
         cy.get('[for="exampleInputEmail1"]').invoke('text').then( text => {
