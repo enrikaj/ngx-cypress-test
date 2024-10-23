@@ -91,7 +91,7 @@ describe('First test suit', () => {
         })
 
     })
-    it.only('extract text values', () => {
+    it('extract text values', () => {
         cy.visit('/');
         cy.contains('Forms').click()
         cy.contains('Form Layouts').click()
@@ -117,19 +117,23 @@ describe('First test suit', () => {
             expect(classValue).to.equal('label')
         })
 
-        //5 Invoke HTML properties (inspect the page and open the tab "Properties"), check that the text exists in input field (for example Email):
+        //5 Invoke HTML properties (inspect the page and open the tab "Properties") - checking that the text "test@test.com" exists in input field:
         cy.get('#exampleInputEmail1').type('test@test.com');
         cy.get('#exampleInputEmail1').invoke('prop', 'value').should('contain', 'test@test.com').then( property => {
             expect(property).to.equal('test@test.com');
-        });
+        })
+    })
+    it.only('radio buttons', () => {
+        cy.visit('/');
+        cy.contains('Forms').click();
+        cy.contains('Form Layouts').click();
 
-
-
-
+        cy.contains('nb-card', 'Using the Grid').find('[type="radio"]').then( radioButtons => {
+            //cy.wrap(radioButtons).eq(0).check() //check the first radio button in the form, its index is 0.
+            cy.wrap(radioButtons).eq(0).check({force: true}).should('be.checked')  //cypress is not able to find the radio button and click it, because it has the class 'visually-hidden', so we use the 'force'. 
+        })
 
     })
-
-
 
 
 
