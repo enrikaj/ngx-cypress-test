@@ -1,5 +1,7 @@
 /// <reference types="cypress" />
 
+const { Input } = require("@angular/core")
+
 // const { text } = require("stream/consumers")
 
 describe('First test suit', () => {
@@ -138,7 +140,7 @@ describe('First test suit', () => {
 
     });
 
-    it.only('checkboxes', () => {
+    it('checkboxes', () => {
         cy.visit('/');
         cy.contains('Modal & Overlays').click();
         cy.contains('Toastr').click();
@@ -147,5 +149,21 @@ describe('First test suit', () => {
         cy.get('[type="checkbox"]').eq(0).click({force: true}) //this does not check the checkbox status
         cy.get('[type="checkbox"]').eq(1).check({force: true}) //
     });
+
+    it.only('Date picker', () => {
+        cy.visit('/');
+        cy.contains('Forms').click();
+        cy.contains('Datepicker').click();
+
+        cy.contains('nb-card', 'Common Datepicker').find('input').then( input => {
+            cy.wrap(input).click(); // Date Picker is opened
+            //select date in current mounth:
+            cy.get('.day-cell').not('.bounding-month').contains('23').click();
+            //check that the date is selected successfully:
+            cy.wrap(input).invoke('prop', 'value').should('contain', 'Oct 23, 2024')
+        })
+    })
+
+
 
 })
