@@ -206,11 +206,11 @@ describe('First test suit', () => {
         // 2. select the value from the dorpdown list and open/close the dropdown list:
         cy.get('nav nb-select').then(dropDown => {
             cy.wrap(dropDown).click()
-            cy.get('.options-list nb-option').each( (listItem, index) => {
+            cy.get('.options-list nb-option').each((listItem, index) => {
                 const itemText = listItem.text().trim()
                 cy.wrap(listItem).click();
                 cy.wrap(dropDown).should('contain', itemText)
-                if( index < 3) {
+                if (index < 3) {
                     cy.wrap(dropDown).click();
                 }
 
@@ -226,7 +226,7 @@ describe('First test suit', () => {
         cy.contains('Smart Table').click();
 
         // 1. Get the row by the text:
-        cy.get('tbody').contains('tr', 'Larry').then( tableRow => {
+        cy.get('tbody').contains('tr', 'Larry').then(tableRow => {
             cy.wrap(tableRow).find('.nb-edit').click();
             cy.wrap(tableRow).find('[placeholder="Age"]').clear().type('35');
             cy.wrap(tableRow).find('.nb-checkmark').click();
@@ -235,17 +235,33 @@ describe('First test suit', () => {
 
         //2. Get the row by the index:
         cy.get('thead').find('.nb-plus').click();
-        cy.get('thead').find('tr').eq(2).then( tableRow => {
+        cy.get('thead').find('tr').eq(2).then(tableRow => {
             cy.wrap(tableRow).find('[placeholder="First Name"]').type("John");
             cy.wrap(tableRow).find('[placeholder="Last Name"]').type("Smith");
             cy.wrap(tableRow).find('.nb-checkmark').click();
         })
-        // validate values in entered new row:
-        cy.get('tbody tr').first().find('td').then( tableColumns => {
+        // 2.1. validate values in entered new row:
+        cy.get('tbody tr').first().find('td').then(tableColumns => {
             cy.wrap(tableColumns).eq(2).should('contain', 'John')
             cy.wrap(tableColumns).eq(3).should('contain', 'Smith')
 
         })
+
+        //3. Get each row validation (creating a little delay "wait" for the table)
+        const age = [20, 30, 40, 200] //kintamuju reiksmes, kurias tikrinam
+
+        cy.wrap(age).each(age => {
+            cy.get('thead [placeholder="Age"]').clear().type(age);
+            cy.wait(500);
+            cy.get('tbody tr').each(tableRow => {
+                if (age == 200) {
+                    cy.wrap(tableRow).should('contain', 'No data found')
+                } else {
+                    cy.wrap(tableRow).find('td').eq(6).should('contain', age)
+                }
+            })
+        })
+
 
     })
 
