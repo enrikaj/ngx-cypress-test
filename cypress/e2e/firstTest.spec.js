@@ -179,7 +179,7 @@ describe('First test suit', () => {
         cy.contains('nb-card', 'Common Datepicker').find('input').then( input => {
             cy.wrap(input).click();
             //3.1. select the date:
-            //3.1.1. create a recorcy function, it is a workaround for cypress to run the loop until the correct date will be selected:
+            //3.1.1. create a recursive function, it is a workaround for cypress to run the loop until the correct date will be selected:
             function selectDayFromCurrent() { 
                 cy.get('nb-calendar-navigation').invoke('attr', 'ng-reflect-date').then( dateAttribute => {
                     if(!dateAttribute.includes(futureMonth) || !dateAttribute.includes(futureYear)){
