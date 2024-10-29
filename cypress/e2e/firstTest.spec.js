@@ -196,14 +196,14 @@ describe('First test suit', () => {
         })
     })
 
-    it.only('Lists and Dropdowns', () => {
+    it('Lists and Dropdowns', () => {
         cy.visit('/');
-        // 4. select the value from the drop down list:
+        // 1. select the value from the drop down list:
         cy.get('nav nb-select').click();
         cy.get('.options-list').contains('Dark').click();
         cy.get('nav nb-select').should('contain', 'Dark');
 
-        // 5. select the value from the dorpdown list and open/close the dropdown list:
+        // 2. select the value from the dorpdown list and open/close the dropdown list:
         cy.get('nav nb-select').then(dropDown => {
             cy.wrap(dropDown).click()
             cy.get('.options-list nb-option').each( (listItem, index) => {
@@ -216,6 +216,21 @@ describe('First test suit', () => {
 
             })
 
+        })
+
+    })
+
+    it.only('Web Tables', () => {
+        cy.visit('/');
+        cy.contains('Tables & Data').click();
+        cy.contains('Smart Table').click();
+
+        // 1. Get the row by text:
+        cy.get('tbody').contains('tr', 'Larry').then( tableRow => {
+            cy.wrap(tableRow).find('.nb-edit').click();
+            cy.wrap(tableRow).find('[placeholder="Age"]').clear().type('35');
+            cy.wrap(tableRow).find('.nb-checkmark').click();
+            cy.wrap(tableRow).find('td').eq(6).should('contain', '35')
         })
 
     })
