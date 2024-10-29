@@ -225,12 +225,26 @@ describe('First test suit', () => {
         cy.contains('Tables & Data').click();
         cy.contains('Smart Table').click();
 
-        // 1. Get the row by text:
+        // 1. Get the row by the text:
         cy.get('tbody').contains('tr', 'Larry').then( tableRow => {
             cy.wrap(tableRow).find('.nb-edit').click();
             cy.wrap(tableRow).find('[placeholder="Age"]').clear().type('35');
             cy.wrap(tableRow).find('.nb-checkmark').click();
             cy.wrap(tableRow).find('td').eq(6).should('contain', '35')
+        })
+
+        //2. Get the row by the index:
+        cy.get('thead').find('.nb-plus').click();
+        cy.get('thead').find('tr').eq(2).then( tableRow => {
+            cy.wrap(tableRow).find('[placeholder="First Name"]').type("John");
+            cy.wrap(tableRow).find('[placeholder="Last Name"]').type("Smith");
+            cy.wrap(tableRow).find('.nb-checkmark').click();
+        })
+        // validate values in entered new row:
+        cy.get('tbody tr').first().find('td').then( tableColumns => {
+            cy.wrap(tableColumns).eq(2).should('contain', 'John')
+            cy.wrap(tableColumns).eq(3).should('contain', 'Smith')
+
         })
 
     })
