@@ -102,26 +102,26 @@ describe('First test suit', () => {
         cy.get('[for="exampleInputEmail1"]').should('contain', 'Email address');
 
         //2
-        cy.get('[for="exampleInputEmail1"]').then( label => {
+        cy.get('[for="exampleInputEmail1"]').then(label => {
             const labelText = label.text();
             expect(labelText).to.equal('Email address');
             cy.wrap(labelText).should('contain', 'Email address');
         });
 
         // //3
-        cy.get('[for="exampleInputEmail1"]').invoke('text').then( text => {
+        cy.get('[for="exampleInputEmail1"]').invoke('text').then(text => {
             expect(text).to.equal('Email address')
         })
         cy.get('[for="exampleInputEmail1"]').invoke('text').as('labelText').should('contain', 'Email address')
 
         //4 
-        cy.get('[for="exampleInputEmail1"]').invoke('attr', 'class').then( classValue => {
+        cy.get('[for="exampleInputEmail1"]').invoke('attr', 'class').then(classValue => {
             expect(classValue).to.equal('label')
         })
 
         //5 Invoke HTML properties (inspect the page and open the tab "Properties") - checking that the text "test@test.com" exists in input field:
         cy.get('#exampleInputEmail1').type('test@test.com');
-        cy.get('#exampleInputEmail1').invoke('prop', 'value').should('contain', 'test@test.com').then( property => {
+        cy.get('#exampleInputEmail1').invoke('prop', 'value').should('contain', 'test@test.com').then(property => {
             expect(property).to.equal('test@test.com');
         })
     });
@@ -130,10 +130,10 @@ describe('First test suit', () => {
         cy.contains('Forms').click();
         cy.contains('Form Layouts').click();
 
-        cy.contains('nb-card', 'Using the Grid').find('[type="radio"]').then( radioButtons => {
+        cy.contains('nb-card', 'Using the Grid').find('[type="radio"]').then(radioButtons => {
             //cy.wrap(radioButtons).eq(0).check() //check the first radio button in the form, its index is 0.
-            cy.wrap(radioButtons).eq(0).check({force: true}).should('be.checked')  //cypress is not able to find the radio button and click it, because it has the class 'visually-hidden', so we use the 'force'. 
-            cy.wrap(radioButtons).eq(1).check({force: true}) //select the second radio button
+            cy.wrap(radioButtons).eq(0).check({ force: true }).should('be.checked')  //cypress is not able to find the radio button and click it, because it has the class 'visually-hidden', so we use the 'force'. 
+            cy.wrap(radioButtons).eq(1).check({ force: true }) //select the second radio button
             cy.wrap(radioButtons).eq(0).should('not.be.checked') // we expect the the first radio button is deselected and should not be checked
             cy.wrap(radioButtons).eq(2).should('be.disabled') //the last radio button should be disabled.
         });
@@ -146,11 +146,11 @@ describe('First test suit', () => {
         cy.contains('Toastr').click();
 
         //cy.get('[type="checkbox"]').check({force: true})
-        cy.get('[type="checkbox"]').eq(0).click({force: true}) //this does not check the checkbox status
-        cy.get('[type="checkbox"]').eq(1).check({force: true}) //
+        cy.get('[type="checkbox"]').eq(0).click({ force: true }) //this does not check the checkbox status
+        cy.get('[type="checkbox"]').eq(1).check({ force: true }) //
     });
 
-    it.only('Date picker', () => {
+    it('Date picker', () => {
         cy.visit('/');
         cy.contains('Forms').click();
         cy.contains('Datepicker').click();
@@ -164,8 +164,8 @@ describe('First test suit', () => {
         let futureDay = date.getDate();
         //26 pamoka "Web date picker (part2)"
         //3. susikuriam kintamaji kuriame suagosime menesio pavadinima:
-        let futureMonth = date.toLocaleDateString('en-US', {month: 'short'})
-        let futureYear = date.getFullYear() 
+        let futureMonth = date.toLocaleDateString('en-US', { month: 'short' })
+        let futureYear = date.getFullYear()
         //2.3. new variable for an expected result:
         let dateToAssert = `${futureMonth} ${futureDay}, ${futureYear}`
 
@@ -176,27 +176,49 @@ describe('First test suit', () => {
         //     //1.1. check that the date is selected successfully:
         //     cy.wrap(input).invoke('prop', 'value').should('contain', 'Oct 23, 2024');
         //     //2. Use date object to get the date:
-        cy.contains('nb-card', 'Common Datepicker').find('input').then( input => {
+        cy.contains('nb-card', 'Common Datepicker').find('input').then(input => {
             cy.wrap(input).click();
             //3.1. select the date:
             //3.1.1. create a recursive function, it is a workaround for cypress to run the loop until the correct date will be selected:
-            function selectDayFromCurrent() { 
-                cy.get('nb-calendar-navigation').invoke('attr', 'ng-reflect-date').then( dateAttribute => {
-                    if(!dateAttribute.includes(futureMonth) || !dateAttribute.includes(futureYear)){
+            function selectDayFromCurrent() {
+                cy.get('nb-calendar-navigation').invoke('attr', 'ng-reflect-date').then(dateAttribute => {
+                    if (!dateAttribute.includes(futureMonth) || !dateAttribute.includes(futureYear)) {
                         cy.get('[data-name="chevron-right"]').click();
                         selectDayFromCurrent();
                     } else {
                         cy.get('.day-cell').not('.bounding-month').contains(futureDay).click();
                     }
-            })
-        }
+                })
+            }
             selectDayFromCurrent();
             cy.wrap(input).invoke('prop', 'value').should('contain', dateToAssert);
             cy.wrap(input).should('have.value', dateToAssert);
         })
     })
 
+    it.only('Lists and Dropdowns', () => {
+        cy.visit('/');
+        // 4. select the value from the drop down list:
+        cy.get('nav nb-select').click();
+        cy.get('.options-list').contains('Dark').click();
+        cy.get('nav nb-select').should('contain', 'Dark');
 
+        // 5. select the value from the dorpdown list and open/close the dropdown list:
+        cy.get('nav nb-select').then(dropDown => {
+            cy.wrap(dropDown).click()
+            cy.get('.options-list nb-option').each( (listItem, index) => {
+                const itemText = listItem.text().trim()
+                cy.wrap(listItem).click();
+                cy.wrap(dropDown).should('contain', itemText)
+                if( index < 3) {
+                    cy.wrap(dropDown).click();
+                }
+
+            })
+
+        })
+
+    })
 
 
 
