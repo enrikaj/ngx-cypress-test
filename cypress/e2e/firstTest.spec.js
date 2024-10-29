@@ -158,12 +158,16 @@ describe('First test suit', () => {
         //2.1. Create a new variable and create a date object (more info google -> JS date -> Mozilla Developer):
         let date = new Date();
         //2.2. I want to select the day wich is 5 days from today, so call the object:
-        date.setDate(date.getDate() + 5);
+        date.setDate(date.getDate() + 100);
         // console.log(date) checking how the date is printed in console
         //2.2. new variable for date wich will be as a selector in the calander
-        let futureDate = date.getDate();
+        let futureDay = date.getDate();
+        //26 pamoka "Web date picker (part2)"
+        //3. susikuriam kintamaji kuriame suagosime menesio pavadinima:
+        let futureMonth = date.toLocaleDateString('en-US', {month: 'short'})
+        let futureYear = date.getFullYear() 
         //2.3. new variable for an expected result:
-        let dateToAssert = `Oct ${futureDate}, 2024`
+        let dateToAssert = `${futureMonth} ${futureDay}, ${futureYear}`
 
         // cy.contains('nb-card', 'Common Datepicker').find('input').then( input => {
         //     cy.wrap(input).click(); // Date Picker is opened
@@ -174,11 +178,25 @@ describe('First test suit', () => {
         //     //2. Use date object to get the date:
         cy.contains('nb-card', 'Common Datepicker').find('input').then( input => {
             cy.wrap(input).click();
-            cy.get('.day-cell').not('.bounding-month').contains(futureDate).click();
+            //3.1. select the date:
+            //3.1.1. create a recorcy function, it is a workaround for cypress to run the loop until the correct date will be selected:
+            function selectDayFromCurrent() { 
+                cy.get('nb-calendar-navigation').invoke('attr', 'ng-reflect-date').then( dateAttribute => {
+                    if(!dateAttribute.includes(futureMonth) || !dateAttribute.includes(futureYear)){
+                        cy.get('[data-name="chevron-right"]').click();
+                        selectDayFromCurrent();
+                    } else {
+                        cy.get('.day-cell').not('.bounding-month').contains(futureDay).click();
+                    }
+            })
+        }
+            selectDayFromCurrent();
             cy.wrap(input).invoke('prop', 'value').should('contain', dateToAssert);
             cy.wrap(input).should('have.value', dateToAssert);
         })
     })
+
+
 
 
 
