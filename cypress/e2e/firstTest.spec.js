@@ -264,7 +264,7 @@ describe('First test suit', () => {
             })
         })
     })
-    it.only('Tooltips', () => {
+    it('Tooltips', () => {
         cy.visit('/');
         cy.contains('Modal & Overlays').click();
         cy.contains('Tooltip').click();
@@ -274,7 +274,25 @@ describe('First test suit', () => {
         cy.get('nb-tooltip').should('contain', 'This is a tooltip');
     })
 
-    
+    it.only('Dialog box', () => {
+        cy.visit('/');
+        cy.contains('Tables & Data').click();
+        cy.contains('Smart Table').click();
+        // 1. example
+        // cy.get('tbody tr').first().find('.nb-trash').click();
+        //this is not good to use, because this code will not be failed if we do not have any confirm message. We could not catch if the widnow has been there or not.:
+        // cy.on('window:confirm', (confirm) => {
+            // expect(confirm).to.equal('Are you sure you want to delete?')
+        // });
+        // 2. example
+        const stub = cy.stub()
+        cy.on('window:confirm', stub);
+        cy.get('tbody tr').first().find('.nb-trash').click().then(() => {
+            expect(stub.getCall(0)).to.be.calledWith('Are you sure you want to delete?')
+        });
+
+        
+    })
 
 
 
