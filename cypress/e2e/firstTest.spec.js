@@ -205,11 +205,13 @@ describe('First test suit', () => {
 
         // 2. select the value from the dorpdown list and open/close the dropdown list:
         cy.get('nav nb-select').then(dropDown => {
-            cy.wrap(dropDown).click()
+            cy.log('Found dropdown');
+            cy.wrap(dropDown).click();
             cy.get('.options-list nb-option').each((listItem, index) => {
-                const itemText = listItem.text().trim()
+                const itemText = listItem.text().trim();
+                cy.log(`Selecting item at index ${index}; itemText: ${itemText}`);
                 cy.wrap(listItem).click();
-                cy.wrap(dropDown).should('contain', itemText)
+                cy.wrap(dropDown).should('contain', itemText);
                 if (index < 3) {
                     cy.wrap(dropDown).click();
                 }
@@ -220,7 +222,7 @@ describe('First test suit', () => {
 
     })
 
-    it.only('Web Tables', () => {
+    it('Web Tables', () => {
         cy.visit('/');
         cy.contains('Tables & Data').click();
         cy.contains('Smart Table').click();
@@ -261,9 +263,18 @@ describe('First test suit', () => {
                 }
             })
         })
-
-
     })
+    it.only('Tooltips', () => {
+        cy.visit('/');
+        cy.contains('Modal & Overlays').click();
+        cy.contains('Tooltip').click();
+
+        cy.contains('nb-card', 'Colored Tooltips')
+        .contains('Default').click();
+        cy.get('nb-tooltip').should('contain', 'This is a tooltip');
+    })
+
+    
 
 
 
